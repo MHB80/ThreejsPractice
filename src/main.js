@@ -28,7 +28,7 @@ function main()
     return cube
   }
   //creating cube
-  cube(0,0xff0000)
+  let cube1 = cube(0,0xff0000)
   cube(1,0x00ff00)
   cube(2,0x0000ff)
   //creating light
@@ -36,19 +36,50 @@ function main()
     const directionalLight = new THREE.DirectionalLight(0xffff00, 1)
     directionalLight.position.set(0, 0, -4)
     scene.add(directionalLight)
-  
- 
-  
   { 
-  let controls = new THREE.OrbitControls(camera,renderer.domElement)
+  let controls = new OrbitControls(camera,renderer.domElement)
   controls.enableDamping = true
   }
-  renderer.render(scene,camera)
+  
   {
     const canvas = renderer.domElement;
     camera.aspect = canvas.clientWidth / canvas.clientHeight;
     camera.updateProjectionMatrix();
   }
+   //creting the animation
+
+   let position = cube1.position
+   let tween = createjs.Tween.get(position)
+   tween.to({x:200},1000) 
+   //tween.play()
+
+   //animatation
+  window.requestAnimationFrame(animate)
+
+
+  function animate(){
+    renderer.render(scene,camera)
+    window.requestAnimationFrame(animate)
+    if (resizeRendererToDisplaySize(renderer)) {
+      const canvas = renderer.domElement;
+      camera.aspect = canvas.clientWidth / canvas.clientHeight;
+      camera.updateProjectionMatrix();
+    }
+    
+  }
+
+  function resizeRendererToDisplaySize(renderer) {
+    const canvas = renderer.domElement;
+    const width = canvas.clientWidth;
+    const height = canvas.clientHeight;
+    const needResize = canvas.width !== width || canvas.height !== height;
+    if (needResize) {
+      renderer.setSize(width, height, false);
+    }
+    return needResize;
+  }
+
+ 
 }
 
 main()
