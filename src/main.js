@@ -1,5 +1,5 @@
 import * as THREE from "three"
-
+import * as TWEEN from "@tweenjs/tween.js"
 import { OrbitControls } from "three/examples/jsm/controls/orbitcontrols"
 import "./style.css"; // Import the stylesheet for webpack
 //import hotkeys from 'hotkeys-js'
@@ -25,6 +25,13 @@ function main()
     const cube = new THREE.Mesh(geometry,material)
     cube.position.x =xlocation
     scene.add(cube)
+    const coords ={x:0,y:0}
+    const tween = new TWEEN.Tween(coords).to({x:7,y:2},5000).easing(TWEEN.Easing.Quadratic.Out).onUpdate(()=>{
+      cube.position.x+=.001
+      cube.position.y+=.001
+      console.log('s')
+    })
+    tween.start(500)
     return cube
   }
   //creating cube
@@ -46,24 +53,21 @@ function main()
     camera.aspect = canvas.clientWidth / canvas.clientHeight;
     camera.updateProjectionMatrix();
   }
-   //creting the animation
-
-   let position = cube1.position
-   let tween = createjs.Tween.get(position)
-   tween.to({x:200},1000) 
-   //tween.play()
+  
 
    //animatation
   window.requestAnimationFrame(animate)
 
 
   function animate(){
+    TWEEN.update()
     renderer.render(scene,camera)
     window.requestAnimationFrame(animate)
     if (resizeRendererToDisplaySize(renderer)) {
       const canvas = renderer.domElement;
       camera.aspect = canvas.clientWidth / canvas.clientHeight;
       camera.updateProjectionMatrix();
+    
     }
     
   }
