@@ -1,13 +1,13 @@
 * {
   margin: 0;
   padding: 0;
-  overflow: hidden;
+  
 }
 
 html, body {
    margin: 0;
    height: 100%;
-   background-color: rgb(162, 179, 125);
+   background-color: rgb(47, 56, 28);
 }
 #canvas {
    width: 100%;
