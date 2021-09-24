@@ -1,5 +1,4 @@
 import * as THREE from "three"
-import * as TWEEN from "@tweenjs/tween.js"
 import { OrbitControls } from "three/examples/jsm/controls/orbitcontrols"
 import "./style.css"; // Import the stylesheet for webpack
 import { LineSegments, ShapeGeometry } from "three";
@@ -7,7 +6,10 @@ import { LineSegments, ShapeGeometry } from "three";
 import { MeshLine, MeshLineMaterial, MeshLineRaycast } from 'three.meshline';
 function main() {
   const canvas = document.querySelector('#canvas');
-  const renderer = new THREE.WebGLRenderer({canvas});
+  const renderer = new THREE.WebGLRenderer({
+    canvas,
+    antialias: true,
+  });
 
   const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, .1, 1000);
   camera.position.z = 2;
@@ -23,11 +25,6 @@ function main() {
   let controls = new OrbitControls(camera, canvas);
   controls.target.set(0, 0, 1);
   controls.update();
-
-  //camerahelper
-  const camerahelper =new THREE.CameraHelper(camera)
-  scene.add(camerahelper)
-  //axis hekperr
 
   // const axesHelper = new THREE.AxesHelper( 100 );
   // scene.add( axesHelper );
