@@ -7,7 +7,9 @@ import { LineSegments, ShapeGeometry } from "three";
 import { MeshLine, MeshLineMaterial, MeshLineRaycast } from 'three.meshline';
 function main() {
   const canvas = document.querySelector('#canvas');
-  const renderer = new THREE.WebGLRenderer({ canvas });
+  const renderer = new THREE.WebGLRenderer({ 
+    canvas,
+    antialias:true });
 
   const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, .1, 1000);
   camera.position.z = 2;
@@ -34,11 +36,12 @@ function main() {
 
 
   //creating a simple plane
-  function createsquare(planeheight,planewidth, squarelength) {
+  function createsquare(planeheight,planewidth, squarelength,planecolor,linecolor,group) {
     const geometry = new THREE.PlaneGeometry(planewidth, planeheight);
     const material = new THREE.MeshBasicMaterial({ color: 0xfffffff, side: THREE.DoubleSide });
     const plane = new THREE.Mesh(geometry, material);
-    scene.add(plane);
+    plane.material.color = planecolor
+    group.add(plane);
 
     //drawing vertical line we use height for that everytime
     //wew have to make the height sliced
@@ -70,12 +73,11 @@ function main() {
     for (let i in slice_width_point) {
       Rline_width_points.push(new THREE.Vector2(planewidth / 2, slice_width_point[i]))
     }
-    console.log(Rline_width_points)
-    console.log(Lline_width_points)
+    
     // as kwnonT both sides have same quantity so they will
     // be same either Lline-width-points or Rlines-width-oints
     for (let i in Rline_width_points) {
-      drawline(Rline_width_points[i], Lline_width_points[i])
+      drawline(Rline_width_points[i], Lline_width_points[i],linecolor,group)
     }
 
     let Tline_height_points = []
@@ -89,18 +91,23 @@ function main() {
 
 
     for (let i in Dline_height_points) {
-      drawline(Dline_height_points[i], Tline_height_points[i])
+      //I used the nested function
+      drawline(Dline_height_points[i], Tline_height_points[i],linecolor,group)
     }
 
 
   }
   createsquare(10, 15, 0.25)
-  function drawline(left_point, right_point) {
+  function drawline(left_point, right_point,linecolor,group) {
     const points = [right_point, left_point]
     const geometry = new THREE.BufferGeometry().setFromPoints(points)
     const material = new THREE.LineBasicMaterial({ color: 0x000000 })
     const line = new THREE.Line(geometry, material)
-    scene.add(line)
+    group.add(line)
+    
+    
+    line.material.color = linecolor
+    
   }
   function resizeRendererToDisplaySize(renderer) {
     const canvas = renderer.domElement;
