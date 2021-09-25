@@ -38,9 +38,8 @@ function main() {
   //creating a simple plane
   function createsquare(planeheight,planewidth, squarelength,planecolor,linecolor,group) {
     const geometry = new THREE.PlaneGeometry(planewidth, planeheight);
-    const material = new THREE.MeshBasicMaterial({ color: 0xfffffff, side: THREE.DoubleSide });
+    const material = new THREE.MeshBasicMaterial({ color:planecolor, side: THREE.DoubleSide });
     const plane = new THREE.Mesh(geometry, material);
-    plane.material.color = planecolor
     group.add(plane);
 
     //drawing vertical line we use height for that everytime
