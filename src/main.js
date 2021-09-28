@@ -2,7 +2,7 @@ import * as THREE from "three"
 import * as TWEEN from "@tweenjs/tween.js"
 import { OrbitControls } from "three/examples/jsm/controls/orbitcontrols"
 import "./style.css"; // Import the stylesheet for webpack
-import { LineSegments, ShapeGeometry } from "three";
+import { LineSegments, ShapeGeometry, Sphere } from "three";
 //import hotkeys from 'hotkeys-js'
 import { MeshLine, MeshLineMaterial, MeshLineRaycast } from 'three.meshline';
 function main() {
@@ -17,97 +17,68 @@ function main() {
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0x1a2a3a)
 
-  const light = new THREE.SpotLight(0xffff, 2, 70, 5)
-  light.lookAt(0, 0, 0)
-  scene.add(light)
+  
+  const light2 = new THREE.SpotLight(0xffaabb, 1, 70, 5)
+  light2.position.set(0,-2,0)
+  
+  scene.add(light2)
+  const light3 = new THREE.SpotLight(0xaa00dd, 1, 70, 5)
+  light3.position.set(1,0,1)
+  
+  scene.add(light3)
 
   //orbit control
   let controls = new OrbitControls(camera, canvas);
-  controls.target.set(0, 0, 1);
+  controls.target.set(0, 0, 0);
   controls.update();
 
-  //camerahelper
-  // const camerahelper = new THREE.CameraHelper(camera)
-  // scene.add(camerahelper)
-  //axis hekperr
+const spheregeometry = new THREE.SphereGeometry(.5)
+const spherematerial = new THREE.MeshPhongMaterial({color : 0xffffff})
+const sphere = new THREE.Mesh(spheregeometry,spherematerial)
+sphere.position.set(0,0,0)
+sphere.material.color =new THREE.Color('white')
+scene.add(sphere)
 
-  // const axesHelper = new THREE.AxesHelper( 100 );
-  // scene.add( axesHelper );
 
+const helper = new THREE.CameraHelper( camera );
+scene.add( helper );
 
-  //creating a simple plane
-  function createsquare(planeheight,planewidth, squarelength,planecolor,linecolor,group) {
-    const geometry = new THREE.PlaneGeometry(planewidth, planeheight);
-    const material = new THREE.MeshBasicMaterial({ color:planecolor, side: THREE.DoubleSide });
-    const plane = new THREE.Mesh(geometry, material);
-    group.add(plane);
-
-    //drawing vertical line we use height for that everytime
-    //wew have to make the height sliced
-    const slice_height_num = planewidth / squarelength
-    let slice_height_point = []
-    let next_height_slice = planewidth / 2
-    for (let i = 0; i < slice_height_num; i++) {
-      slice_height_point.push(next_height_slice)
-      next_height_slice = next_height_slice - squarelength
+const axeshelper = new THREE.AxesHelper()
+scene.add(axeshelper)
+  function changematerial(inputobj,wantedmaterial)
+  {
+    // coping the previous material information
+    let newmaterial,newgeometry,newmesh;
+    switch (wantedmaterial) {
+      
+      case 'Basic':
+        inputobj.remove()
+        newmaterial = new THREE.MeshBasicMaterial({color:inputobj.material.color})
+        newgeometry = sphere.geometry.clone()
+        newmesh = new THREE.Mesh(newgeometry,newmaterial)
+        scene.add(newmesh)
+        break;
+      case 'phong':
+        inputobj.remove()
+        newmaterial = new THREE.MeshPhongMaterial({color:inputobj.material.color})
+        newgeometry = sphere.geometry.clone()
+        newmesh = new THREE.Mesh(newgeometry,newmaterial)
+        scene.add(newmesh)
+        break;
+      case 'lambert':
+        inputobj.remove()
+        newmaterial = new THREE.MeshLambertMaterial({color:inputobj.material.color})
+        newgeometry = sphere.geometry.clone()
+        newmesh = new THREE.Mesh(newgeometry,newmaterial)
+        scene.add(newmesh)
+        break;
+      default:
+        break;
     }
-
-    const slice_width_num = planeheight / squarelength
-    let slice_width_point = []
-    let next_width_slice = planeheight / 2
-    for (let i = 0; i < slice_width_num; i++) {
-      slice_width_point.push(next_width_slice)
-      next_width_slice = next_width_slice - squarelength
-    }
-
-    //creating the corresponding points to connect them to 
-    //each other in the plane
-
-    let Lline_width_points = []
-    for (let i in slice_width_point) {
-      Lline_width_points.push(new THREE.Vector2(-planewidth / 2, slice_width_point[i]))
-    }
-
-    let Rline_width_points = []
-    for (let i in slice_width_point) {
-      Rline_width_points.push(new THREE.Vector2(planewidth / 2, slice_width_point[i]))
-    }
-    
-    // as kwnonT both sides have same quantity so they will
-    // be same either Lline-width-points or Rlines-width-oints
-    for (let i in Rline_width_points) {
-      drawline(Rline_width_points[i], Lline_width_points[i],linecolor,group)
-    }
-
-    let Tline_height_points = []
-    for (let i in slice_height_point) {
-      Tline_height_points.push(new THREE.Vector2(slice_height_point[i], planeheight / 2))
-    }
-    let Dline_height_points = []
-    for (let i in slice_height_point) {
-      Dline_height_points.push(new THREE.Vector2(slice_height_point[i], -planeheight / 2))
-    }
-
-
-    for (let i in Dline_height_points) {
-      //I used the nested function
-      drawline(Dline_height_points[i], Tline_height_points[i],linecolor,group)
-    }
-
-
   }
-  createsquare(10, 15, 0.25)
-  function drawline(left_point, right_point,linecolor,group) {
-    const points = [right_point, left_point]
-    const geometry = new THREE.BufferGeometry().setFromPoints(points)
-    const material = new THREE.LineBasicMaterial({ color: 0x000000 })
-    const line = new THREE.Line(geometry, material)
-    group.add(line)
-    
-    
-    line.material.color = linecolor
-    
-  }
+  changematerial(sphere,'lambert')
+  //changematerial(sphere,'Basic')
+  //changematerial(sphere,'phong')
   function resizeRendererToDisplaySize(renderer) {
     const canvas = renderer.domElement;
     const width = canvas.clientWidth;
