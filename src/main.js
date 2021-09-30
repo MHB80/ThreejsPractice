@@ -25,7 +25,7 @@ function main() {
   let controls = new OrbitControls(camera, canvas);
   controls.target.set(0, 0, 0);
   controls.update();
-  
+
   const helper = new THREE.CameraHelper(camera);
   scene.add(helper);
 
@@ -46,12 +46,12 @@ function main() {
     scene.add(sphere)
     function changematerial(mat) {
       // coping the previous material information
-      sphere.material =mat
-      
+      sphere.material = mat
+
     }
   }
 
-  newMaterialShow(10,10)
+  newMaterialShow(10, 10)
   function resizeRendererToDisplaySize(renderer) {
     const canvas = renderer.domElement;
     const width = canvas.clientWidth;
@@ -72,18 +72,16 @@ function main() {
       camera.updateProjectionMatrix();
     }
 
-if(!RenderNeeded)
-{
-        renderer.setAnimationLoop(render)
-        renderer.render(scene, camera);
-        RenderNeeded = false
-}else
-{
-        renderer.setAnimationLoop(null)
-}
-RenderNeeded =true
+    if (!RenderNeeded) {
+      renderer.setAnimationLoop(render)
+      renderer.render(scene, camera);
+      RenderNeeded = false
+    } else {
+      renderer.setAnimationLoop(null)
+    }
+    RenderNeeded = true
 
-    
+
 
     requestAnimationFrame(render);
   }
