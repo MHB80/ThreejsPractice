@@ -1,5 +1,4 @@
 import * as THREE from "three"
-import { SphereGeometry } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/orbitcontrols"
 import "./style.css"; // Import the stylesheet for webpack
 let RenderNeeded
@@ -32,36 +31,37 @@ function main() {
 
   const axeshelper = new THREE.AxesHelper()
   scene.add(axeshelper)
-  function CreateMaaterialView(width,height)
-  {
+
+
+  function CreateMaaterial(width, height) {
     //creating the plane
-    const planematerial = new THREE.MeshBasicMaterial({color : 'blue'})
-    const planegeometry =  new THREE.PlaneGeometry(width,height)
-    const plane = new THREE.Mesh(planegeometry,planematerial)
+    const planematerial = new THREE.MeshBasicMaterial({ color: 'blue' })
+    const planegeometry = new THREE.PlaneGeometry(width, height)
+    const plane = new THREE.Mesh(planegeometry, planematerial)
     scene.add(plane)
 
     //creating the shape
-    const spherematerial = new THREE.MeshPhongMaterial({color : 'pink'})
+    const spherematerial = new THREE.MeshPhongMaterial({ color: 'pink' })
     const spheregeometry = new THREE.SphereGeometry(.5)
-    const shape = new THREE.Mesh(spherematerial,spheregeometry)
+    const shape = new THREE.Mesh(spherematerial, spheregeometry)
     scene.add(shape)
-    return{
-      'scene':scene,
-      'camera':camera,
-      'shape':shape,
-      'renderer':renderer,
-      'light':light,
+
+    return {
+      'scene': scene,
+      'camera': camera,
+      'shape': shape,
+      'renderer': renderer,
+      'light': light,
     }
   }
-  function ChangeMAterial(MaterialViewObject,newMaterial)
-  {
-    MaterialViewObject = newMaterial 
-    renderer.render(scene,camera)
+  function ChangeMAterial(MaterialViewObject, newMaterial) {
+    MaterialViewObject.material = newMaterial
+    renderer.render(scene, camera)
   }
-  const newMaterialView = CreateMaaterialView()
+  const newMaterialView = CreateMaaterial(10, 10)
 
-  ChangeMAterial(newMaterialView,new THREE.MeshBasicMaterial({color: 'green'}))
-  
+  ChangeMAterial(newMaterialView, new THREE.MeshPhongMaterial({ color: 'green' }))
+
   function resizeRendererToDisplaySize(renderer) {
     const canvas = renderer.domElement;
     const width = canvas.clientWidth;
@@ -82,10 +82,10 @@ function main() {
       camera.updateProjectionMatrix();
     }
 
-   
-      renderer.render(scene, camera);
-      
-  
+
+    renderer.render(scene, camera);
+
+
     requestAnimationFrame(render);
   }
 
